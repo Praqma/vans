@@ -14,9 +14,12 @@ public class VANSLog extends XML
 	
 	public VANSLog( List<Findings> findingsList )
 	{
+		super( "cases" );
+		
 		for( Findings findings : findingsList )
 		{
-			Element testcase = addElement( "case" );
+			Element testcase = addElement( "findings" );
+			testcase.setAttribute( "number", findings.size() + "" );
 			
 			for( Finding f : findings )
 			{

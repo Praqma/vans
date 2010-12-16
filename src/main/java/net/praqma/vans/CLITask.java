@@ -16,6 +16,7 @@ public class CLITask
 		/* PROTOTYPE shell */
 		//Shell shell = new Shell( new File( cwd ), "dir" );
 		Shell shell = new Shell( new File( cwd ), "cd /d c:\\projects\\COOL\\trunk & mvn package" );
+		//Shell shell = new Shell( new File( cwd ), "dir" );
 		MavenFilter filter = new MavenFilter();
 		Task task = new Task( shell, filter );
 		task.run();

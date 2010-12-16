@@ -17,7 +17,7 @@ public class MavenFilter extends Filter
 	
 	public void filter( String input )
 	{
-		System.out.println( "Maven filter" );
+		System.out.println( "Running Maven filter..." );
 		
 		Matcher matches = null;
 		

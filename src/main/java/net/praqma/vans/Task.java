@@ -46,7 +46,7 @@ public class Task
 		}
 		
 		VANSLog log = new VANSLog( findingsList );
-		log.SaveState();
+		log.SaveState( "findings.xml" );
 	}
 
 }

@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Shell implements Command
+public class Shell extends BasicCommand
 {
 	private static String linesep = System.getProperty( "line.separator" );
 	
@@ -15,8 +15,6 @@ public class Shell implements Command
 	private String cmd;
 	private File tempbatch = null;
 	
-	private boolean verbose = false;
-
 	public Shell( File path, String cmd )
 	{
 		/* Make temporary batch file */
@@ -62,22 +60,36 @@ public class Shell implements Command
 			e.printStackTrace();
 		}
 		
+		Wait waiter = new Wait();
+		waiter.start();
+
 		/* Eat the output stream */
 		InputStreamReader isr = new InputStreamReader( p.getInputStream() );
 		BufferedReader br = new BufferedReader( isr );
 		String line = null;
 		StringBuffer sb = new StringBuffer();
 		
+		int counter = 0;
+		
 		try
 		{
 			while( ( line = br.readLine() ) != null )
 			{
+				counter++;
+				
 				sb.append( line + linesep );
 				if( verbose )
 				{
 					System.out.println( line );
 				}
+				else
+				{
+//					System.out.print( "\r" + out2 );
+//					System.out.print( "\r" + new String(new char[(counter%length)]).replace("\0", ".") + "*" );
+				}
 			}
+			
+			System.out.println( "" );
 		}
 		catch ( IOException e )
 		{
@@ -100,10 +112,47 @@ public class Shell implements Command
             Thread.interrupted();
         }
         
+        waiter.done();
+        
         /* Do we care about the exit value? */
         System.out.println( "Exit value: " + exitValue );
 
         return sb.toString();
 	}
-
+	
+	private class Wait extends Thread
+	{
+		private volatile boolean done = false;
+		
+		public void done()
+		{
+			this.done = true;
+		}
+		
+		public void run()
+		{
+			int length = 10;
+			int counter = 10;
+			String out2 = new String(new char[(length+1)]).replace("\0", ".");
+			
+			while( !done )
+			{
+				
+				counter++;
+				System.out.print( "\r" + out2 );
+				System.out.print( "\r" + new String(new char[Math.abs( -10 + (counter%(2*length)))]).replace("\0", ".") + "*" );
+				
+				try
+				{
+					Thread.sleep( 50 );
+				}
+				catch ( InterruptedException e )
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 }

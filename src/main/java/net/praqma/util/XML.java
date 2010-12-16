@@ -24,7 +24,7 @@ public class XML
 	private Document doc;
 	private Element root;
 	
-	public XML()
+	public XML( String roottag )
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware( true );
@@ -40,7 +40,7 @@ public class XML
 		}
 		
 		/* Preparing the root note */
-		root = (Element)doc.appendChild( doc.createElement( "findings" ) );
+		root = (Element)doc.appendChild( doc.createElement( roottag ) );
 	}
 	
 	public Element getRoot()
@@ -89,12 +89,12 @@ public class XML
 		return out.toString();
 	}
 	
-	public void SaveState()
+	public void SaveState( String filename )
 	{
 		String xml = GetXML();
 		try
 		{
-			FileWriter fw = new FileWriter( "findings.xml" );
+			FileWriter fw = new FileWriter( filename );
 			BufferedWriter bw = new BufferedWriter( fw );
 			bw.append( xml );
 			bw.close();
