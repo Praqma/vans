@@ -81,20 +81,14 @@ public class Task
 		
 		log.setErrors( errors );
 		
-//		int counter = 0;
-//		for( Findings findings : findingsList )
-//		{
-//			counter += findings.size();
-//		}
-		
-		
-		
 		File save = new File( "findings.xml" );
 		log.SaveState( save );
 		
 		/* FOR FUN!!! ONLY!!! */
 		File xsl = new File( "C:\\projects\\VANS\\trunk\\src\\main\\resources\\junit.xsl" );
-		System.out.println( log.transform( save, xsl ) );
+		//System.out.println( log.transform( save, xsl ) );
+		File out = new File( "log.xml" );
+		log.transform( save, "/junit.xsl", out );
 	}
 
 }

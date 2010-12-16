@@ -20,8 +20,8 @@ public class CLITask
 		MavenFilter filter = new MavenFilter();
 		
 		
-		Task task = new Task( new Command[]{shell,shell}, filter );
-		//Task task = new Task( shell, filter );
+		//Task task = new Task( new Command[]{shell,shell}, filter );
+		Task task = new Task( shell, filter );
 		task.run();
 	}
 

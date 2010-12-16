@@ -3,6 +3,8 @@ package net.praqma.util;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -115,21 +117,27 @@ public class XML
 		}
 	}
 	
-	public String transform( File xml, File xsl )
+	public String transform( File xml, String xsl, File output )
 	{
-		StreamSource xsltSource = new StreamSource( xsl );
+		//StreamSource xsltSource = new StreamSource( xsl );
 		StreamSource xmlSource  = new StreamSource( xml );
+		StreamSource xsltSource = new StreamSource( getClass().getResourceAsStream( xsl ) );
+
 
         TransformerFactory transFact = TransformerFactory.newInstance();
 
         try
 		{
-        	Transformer trans = transFact.newTransformer( xsltSource );
-        	trans.setOutputProperty( OutputKeys.ENCODING, "UTF-8" );
+        	Transformer transformer = transFact.newTransformer( xsltSource );
+        	transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" );
+        	transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
+        	transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "4" );
+        	transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
         	
         	/* Correct UTF-8 encoding!? */
-        	OutputStream os = new ByteArrayOutputStream();
-			trans.transform( xmlSource, new StreamResult( os ) );
+        	OutputStream os = new FileOutputStream( output );
+        	transformer.transform( xmlSource, new StreamResult( os ) );
+			
 			return os.toString();
 			
 			/*
@@ -139,6 +147,11 @@ public class XML
 			 */
 		}
 		catch ( TransformerException e )
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch ( FileNotFoundException e )
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
