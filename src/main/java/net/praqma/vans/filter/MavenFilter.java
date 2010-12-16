@@ -35,4 +35,9 @@ public class MavenFilter extends Filter
 			findings.add( new Finding( matches.group( 1 ), Level.ERROR ) );
 		}
 	}
+	
+	public String getName()
+	{
+		return "Maven";
+	}
 }

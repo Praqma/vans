@@ -1,8 +1,11 @@
 package net.praqma.util;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringWriter;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -12,9 +15,11 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -89,8 +94,11 @@ public class XML
 		return out.toString();
 	}
 	
-	public void SaveState( String filename )
+	//public void SaveState( String filename )
+	public void SaveState( File filename )
 	{
+		System.out.println( "Saving log to " + filename );
+		
 		String xml = GetXML();
 		try
 		{
@@ -105,5 +113,37 @@ public class XML
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public String transform( File xml, File xsl )
+	{
+		StreamSource xsltSource = new StreamSource( xsl );
+		StreamSource xmlSource  = new StreamSource( xml );
+
+        TransformerFactory transFact = TransformerFactory.newInstance();
+
+        try
+		{
+        	Transformer trans = transFact.newTransformer( xsltSource );
+        	trans.setOutputProperty( OutputKeys.ENCODING, "UTF-8" );
+        	
+        	/* Correct UTF-8 encoding!? */
+        	OutputStream os = new ByteArrayOutputStream();
+			trans.transform( xmlSource, new StreamResult( os ) );
+			return os.toString();
+			
+			/*
+			StringWriter sw = new StringWriter();
+        	trans.transform( xmlSource, new StreamResult( sw ) );
+			return sw.toString();
+			 */
+		}
+		catch ( TransformerException e )
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "";
 	}
 }

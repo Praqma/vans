@@ -11,12 +11,13 @@ public class Shell extends BasicCommand
 {
 	private static String linesep = System.getProperty( "line.separator" );
 	
-	private File cwd;
-	private String cmd;
 	private File tempbatch = null;
 	
 	public Shell( File path, String cmd )
 	{
+		this.cmd = cmd;
+		this.cwd = path;
+		
 		/* Make temporary batch file */
 		File temp = null;
 		try
@@ -33,7 +34,7 @@ public class Shell extends BasicCommand
 			e.printStackTrace();
 		}
 		
-		System.out.println( "Using batch file: " + temp.getAbsolutePath() );
+		//System.out.println( "Using batch file: " + temp.getAbsolutePath() );
 		
 		this.tempbatch = temp;
 		this.cwd = path;
@@ -49,6 +50,8 @@ public class Shell extends BasicCommand
 		pb.directory( cwd );
 		
 		Process p = null;
+		
+		System.out.println( "Current working directory: " + cwd );
 		
 		/* Start the process */
 		try
@@ -82,14 +85,8 @@ public class Shell extends BasicCommand
 				{
 					System.out.println( line );
 				}
-				else
-				{
-//					System.out.print( "\r" + out2 );
-//					System.out.print( "\r" + new String(new char[(counter%length)]).replace("\0", ".") + "*" );
-				}
 			}
 			
-			System.out.println( "" );
 		}
 		catch ( IOException e )
 		{
@@ -113,6 +110,18 @@ public class Shell extends BasicCommand
         }
         
         waiter.done();
+        
+        try
+		{
+			waiter.join();
+		}
+		catch ( InterruptedException e )
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println( "" );
         
         /* Do we care about the exit value? */
         System.out.println( "Exit value: " + exitValue );
@@ -140,7 +149,7 @@ public class Shell extends BasicCommand
 				
 				counter++;
 				System.out.print( "\r" + out2 );
-				System.out.print( "\r" + new String(new char[Math.abs( -10 + (counter%(2*length)))]).replace("\0", ".") + "*" );
+				System.out.print( "\r" + new String(new char[Math.abs( -9 + (counter%(2*length)))]).replace("\0", ".") + "0" );
 				
 				try
 				{
@@ -152,6 +161,8 @@ public class Shell extends BasicCommand
 					e.printStackTrace();
 				}
 			}
+			
+			System.out.print( "\r (DONE)          " );
 		}
 	}
 	
