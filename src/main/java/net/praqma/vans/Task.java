@@ -14,6 +14,7 @@ import net.praqma.vans.command.Shell;
 import net.praqma.vans.filter.Filter;
 import net.praqma.vans.filter.Filter.Findings;
 import net.praqma.vans.filter.Finding;
+import net.praqma.vans.util.Status;
 import net.praqma.vans.util.TaskException;
 
 public class Task
@@ -21,7 +22,9 @@ public class Task
 	private List<Command> commands = new ArrayList<Command>();
 	private Filter filter          = null;
 	private static final File cwd  = new File( System.getProperty( "user.dir" ) );
-
+	
+	private VANSReport report = null;
+	
 	public Task( Command command, Filter filter )
 	{
 		this.commands.add( command );
@@ -61,34 +64,54 @@ public class Task
 		this.filter  = filter;
 	}
 	
+	public void saveVANSReport( File save ) throws TaskException
+	{
+		if( report != null )
+		{
+			System.out.println( "Saving log to " + save );
+			report.saveState( save );
+		}
+		else
+		{
+			System.err.println( "Cannot save an uninitialized report, make sure the Task is run()" );
+			throw new TaskException( "Cannot save an uninitialized report" );
+		}
+	}
+	
+	public void saveReport( File save ) throws TaskException
+	{
+		if( report != null )
+		{
+			System.out.println( "Saving log to " + save );
+			report.transform( "/junit.xsl", save );
+		}
+		else
+		{
+			System.err.println( "Cannot save an uninitialized report, make sure the Task is run()" );
+			throw new TaskException( "Cannot save an uninitialized report" );
+		}
+	}
+	
 	public void run()
 	{
-		VANSLog log = new VANSLog( filter.getName() );
+		report = new VANSReport( filter.getName() );
 		
 		int errors = 0;
 		for( Command cmd : commands )
 		{
-			System.out.println( "Executing the command \"" + cmd.getCmd() + "\"" );
+			System.out.println( "Directory: " + cmd.getCwd() );
+			System.out.println( "Command:   " + cmd.getCmd() );
 			String result = cmd.execute();
-			filter.filter( result );
+			Status status = filter.filter( result );
 			Findings findings = filter.getFindings();
 			System.out.println( findings.size() + " findings." );
 			errors += findings.numberOfErrors();
-			log.addCase( findings, cmd );
+			report.addCase( findings, cmd, status );
 			
 			findings.reset();
 		}
 		
-		log.setErrors( errors );
-		
-		File save = new File( "findings.xml" );
-		log.SaveState( save );
-		
-		/* FOR FUN!!! ONLY!!! */
-		File xsl = new File( "C:\\projects\\VANS\\trunk\\src\\main\\resources\\junit.xsl" );
-		//System.out.println( log.transform( save, xsl ) );
-		File out = new File( "log.xml" );
-		log.transform( save, "/junit.xsl", out );
+		report.setErrors( errors );
 	}
 
 }
