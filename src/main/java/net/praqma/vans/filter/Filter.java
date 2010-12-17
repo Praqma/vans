@@ -3,6 +3,7 @@ package net.praqma.vans.filter;
 import java.util.ArrayList;
 
 import net.praqma.vans.filter.Finding.Level;
+import net.praqma.vans.util.Status;
 
 public abstract class Filter
 {	
@@ -35,11 +36,13 @@ public abstract class Filter
 	}
 	
 	protected Findings findings = new Findings();
+	protected boolean failOnWarnings = false;
 	
 	
-	public void filter( String input )
+	public Status filter( String input )
 	{
 		System.out.println( "Abstract filter!?" );
+		return null;
 	}
 	
 	
@@ -56,7 +59,11 @@ public abstract class Filter
 	public void reset()
 	{
 		findings.reset();
-
+	}
+	
+	public void failOnWarnings( boolean b )
+	{
+		this.failOnWarnings = b;
 	}
 	
 }
