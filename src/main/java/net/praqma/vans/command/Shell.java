@@ -51,8 +51,6 @@ public class Shell extends BasicCommand
 		
 		Process p = null;
 		
-		System.out.println( "Current working directory: " + cwd );
-		
 		/* Start the process */
 		try
 		{
@@ -124,7 +122,7 @@ public class Shell extends BasicCommand
 		System.out.println( "" );
         
         /* Do we care about the exit value? */
-        System.out.println( "Exit value: " + exitValue );
+        //System.out.println( "Exit value: " + exitValue );
 
         return sb.toString();
 	}
