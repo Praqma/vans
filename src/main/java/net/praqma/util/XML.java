@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 
@@ -66,7 +67,7 @@ public class XML
 	}
 	
 	
-	public String GetXML()
+	public String getXML()
 	{
 		StringWriter out = new StringWriter();
 		
@@ -96,34 +97,62 @@ public class XML
 		return out.toString();
 	}
 	
-	//public void SaveState( String filename )
-	public void SaveState( File filename )
+	
+	public Source getXMLAsSource()
 	{
-		System.out.println( "Saving log to " + filename );
-		
-		String xml = GetXML();
 		try
 		{
-			FileWriter fw = new FileWriter( filename );
-			BufferedWriter bw = new BufferedWriter( fw );
-			bw.append( xml );
-			bw.close();
-			fw.close();
+		    TransformerFactory factory = TransformerFactory.newInstance();
+		    //factory.setAttribute( "indent-number", new Integer( 4 ) );
+		    		    
+		    Transformer transformer = factory.newTransformer();
+		    
+		    transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
+		    transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
+		    		    
+		    //aTransformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, "yes" );
+		    transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "4" );
+	
+		    return new DOMSource( doc );
 		}
-		catch ( IOException e )
+		catch ( Exception e )
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return null;
 	}
 	
+
 	public String transform( File xml, String xsl, File output )
 	{
-		//StreamSource xsltSource = new StreamSource( xsl );
 		StreamSource xmlSource  = new StreamSource( xml );
 		StreamSource xsltSource = new StreamSource( getClass().getResourceAsStream( xsl ) );
-
-
+		
+		return transform( xmlSource, xsltSource, output );
+	}
+	
+	
+	public String transform( String xsl, File output )
+	{
+		StreamSource xsltSource = null;
+		
+		try
+		{
+			xsltSource = new StreamSource( getClass().getResourceAsStream( xsl ) );
+		}
+		catch( Exception e )
+		{
+			/*  Debugging only */
+			xsltSource  = new StreamSource( "C:\\projects\\VANS\\trunk\\src\\main\\resources\\junit.xsl" );
+		}
+		
+		return transform( new DOMSource( doc ), xsltSource, output );
+	}
+	
+	
+	public String transform( Source xmlSource, StreamSource xsltSource, File output )
+	{
         TransformerFactory transFact = TransformerFactory.newInstance();
 
         try
@@ -139,12 +168,6 @@ public class XML
         	transformer.transform( xmlSource, new StreamResult( os ) );
 			
 			return os.toString();
-			
-			/*
-			StringWriter sw = new StringWriter();
-        	trans.transform( xmlSource, new StreamResult( sw ) );
-			return sw.toString();
-			 */
 		}
 		catch ( TransformerException e )
 		{
@@ -158,5 +181,24 @@ public class XML
 		}
 
 		return "";
+	}
+
+
+	public void saveState( File filename )
+	{
+		String xml = getXML();
+		try
+		{
+			FileWriter fw = new FileWriter( filename );
+			BufferedWriter bw = new BufferedWriter( fw );
+			bw.append( xml );
+			bw.close();
+			fw.close();
+		}
+		catch ( IOException e )
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
