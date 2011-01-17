@@ -1,0 +1,6 @@
+<default>
+	<maven>
+		<option name="clean">clean</option>
+		<option name="package">package</option>
+	</maven>
+</default>

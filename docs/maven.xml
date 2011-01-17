@@ -1,0 +1,16 @@
+<project type="Maven">
+	<tasks>
+		
+		<task name="VANS" directory="c:\projects\PRAQMA\VANS\trunk">
+			<option name="clean">clean</option>
+			<option name="package">package</option>
+		</task>
+		
+		<task name="COOL" type="Maven" directory="c:\projects\PRAQMA\COOL\trunk">
+			<option name="clean">clean</option>
+			<option name="package"></option>
+			<option name="install">install</option>
+		</task>
+		
+	</tasks>
+</project>

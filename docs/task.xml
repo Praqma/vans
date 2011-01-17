@@ -1,0 +1,4 @@
+<task name="gbuild">
+	<argument name="arg1">value1</argument>
+	<argument name="arg2">value2</argument>
+</task>
