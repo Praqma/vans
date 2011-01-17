@@ -2,6 +2,7 @@ package net.praqma.vans.configuration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,15 +14,18 @@ import net.praqma.util.xml.XML;
 import net.praqma.vans.configuration.Configuration.Type;
 import net.praqma.vans.util.VANSException;
 
-public class ConfigurationParser extends XML
+public class ProjectParser extends XML
 {
 	Logger logger = Logger.getLogger();
 	
-	private static ClassLoader classloader = ConfigurationParser.class.getClassLoader();
+	private static ClassLoader classloader = ProjectParser.class.getClassLoader();
 	
-	Map<String, Configuration> confs = new HashMap<String, Configuration>();
+	//public Map<String, Configuration> confs = new HashMap<String, Configuration>();
+	public List<Configuration> confs = new ArrayList<Configuration>();
+	
+	public Type superType = Type.unknown;
 
-	public ConfigurationParser( File configuration ) throws VANSException, IOException
+	public ProjectParser( File configuration ) throws VANSException, IOException
 	{
 		super( configuration );
 		
@@ -31,22 +35,30 @@ public class ConfigurationParser extends XML
 		
 		List<Element> tasks = this.getElements( taske, "task" );
 		
-		Type superType = Type.valueOf( getRoot().getAttribute( "type" ) );
+		superType = Type.valueOf( getRoot().getAttribute( "type" ) );
 		
 		for( Element task : tasks )
 		{
+			Type mytype = superType;
+			
+			if( !getRoot().getAttribute( "type" ).equals( "" ) )
+			{
+				//conf.setType( Type.valueOf( getRoot().getAttribute( "type" ) ) );
+				mytype = Type.valueOf( getRoot().getAttribute( "type" ) );
+			}
+			
 			
 			Class<Configuration> eclass = null;
 			Configuration conf = null;
 			
 			try
 			{	
-				eclass = (Class<Configuration>) classloader.loadClass( "net.praqma.vans.configuration." + type  );
+				eclass = (Class<Configuration>) classloader.loadClass( "net.praqma.vans.configuration." + mytype  );
 			}
 			catch ( ClassNotFoundException e )
 			{
-				logger.error( "The class " + type + " is not available." );
-				throw new VANSException( "The class " + type + " is not available." );
+				logger.error( "The class " + mytype + " is not available." );
+				throw new VANSException( "The class " + mytype + " is not available." );
 			}
 			
 			try
@@ -66,16 +78,16 @@ public class ConfigurationParser extends XML
 				conf.addOption( option.getAttribute( "name" ), option.getTextContent() );
 			}
 			
-			if( !getRoot().getAttribute( "type" ).equals( "" ) )
+			conf.setType( mytype );
+			
+			conf.workingDir = new File( task.getAttribute( "directory" ) );
+			if( !conf.workingDir.exists() )
 			{
-				conf.setType( Type.valueOf( getRoot().getAttribute( "type" ) ) );
-			}
-			else
-			{
-				conf.setType( superType );
+				throw new VANSException( "The working directory " + conf.workingDir + " does not exist." );
 			}
 			
-			confs.put( taske.getAttribute( "name" ), conf );
+			conf.setName( taske.getAttribute( "name" ) );
+			confs.add( conf );
 		}
 	}
 	
