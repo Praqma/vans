@@ -1,6 +1,6 @@
 package net.praqma.vans.util;
 
-public class TaskException extends Exception
+public class VANSException extends Exception
 {
 	public UCMType type = UCMType.DEFAULT;
 	
@@ -9,17 +9,17 @@ public class TaskException extends Exception
 		DEFAULT
 	}
 	
-	public TaskException()
+	public VANSException()
 	{
 		super(); 
 	}
 	
-	public TaskException( String s )
+	public VANSException( String s )
 	{
 		super( s ); 
 	}
 	
-	public TaskException( String s, UCMType type )
+	public VANSException( String s, UCMType type )
 	{
 		super( s );
 		

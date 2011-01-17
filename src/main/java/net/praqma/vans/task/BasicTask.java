@@ -1,8 +1,8 @@
-package net.praqma.vans.command;
+package net.praqma.vans.task;
 
 import java.io.File;
 
-public class BasicCommand implements Command
+public class BasicTask implements Task
 {
 	
 	boolean verbose = false;
@@ -14,7 +14,6 @@ public class BasicCommand implements Command
 	{
 		return null;
 	}
-
 
 	public void verbose( boolean verbose )
 	{

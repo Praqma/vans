@@ -1,8 +1,8 @@
-package net.praqma.vans.command;
+package net.praqma.vans.task;
 
 import java.io.File;
 
-public abstract interface Command
+public abstract interface Task
 {
 	public String getCmd();
 	public File getCwd();

@@ -9,41 +9,41 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.praqma.vans.command.Command;
-import net.praqma.vans.command.Shell;
 import net.praqma.vans.filter.Filter;
 import net.praqma.vans.filter.Filter.Findings;
 import net.praqma.vans.filter.Finding;
+import net.praqma.vans.task.Shell;
+import net.praqma.vans.task.Task;
 import net.praqma.vans.util.Status;
-import net.praqma.vans.util.TaskException;
+import net.praqma.vans.util.VANSException;
 
-public class Task
+public class Tasks
 {
-	private List<Command> commands = new ArrayList<Command>();
+	private List<Task> commands = new ArrayList<Task>();
 	private Filter filter          = null;
 	private static final File cwd  = new File( System.getProperty( "user.dir" ) );
 	
 	private VANSReport report = null;
 	
-	public Task( Command command, Filter filter )
+	public Tasks( Task command, Filter filter )
 	{
 		this.commands.add( command );
 		this.filter  = filter;
 	}
 	
-	public Task( Command[] commands, Filter filter )
+	public Tasks( Task[] commands, Filter filter )
 	{
 		this.commands.addAll( Arrays.asList( commands ) );
 		this.filter  = filter;
 	}
 	
-	public Task( List<Command> commands, Filter filter )
+	public Tasks( List<Task> commands, Filter filter )
 	{
 		this.commands = commands;
 		this.filter  = filter;
 	}
 	
-	public Task( File commands, Filter filter ) throws TaskException
+	public Tasks( File commands, Filter filter ) throws VANSException
 	{
 		/* Get commands from file */
 		try
@@ -59,12 +59,12 @@ public class Task
 		}
 		catch ( Exception e )
 		{
-			throw new TaskException( "Could not process the file \"" + commands.toString() + "\"" );
+			throw new VANSException( "Could not process the file \"" + commands.toString() + "\"" );
 		}
 		this.filter  = filter;
 	}
 	
-	public void saveVANSReport( File save ) throws TaskException
+	public void saveVANSReport( File save ) throws VANSException
 	{
 		if( report != null )
 		{
@@ -74,11 +74,11 @@ public class Task
 		else
 		{
 			System.err.println( "Cannot save an uninitialized report, make sure the Task is run()" );
-			throw new TaskException( "Cannot save an uninitialized report" );
+			throw new VANSException( "Cannot save an uninitialized report" );
 		}
 	}
 	
-	public void saveReport( File save ) throws TaskException
+	public void saveReport( File save ) throws VANSException
 	{
 		if( report != null )
 		{
@@ -88,7 +88,7 @@ public class Task
 		else
 		{
 			System.err.println( "Cannot save an uninitialized report, make sure the Task is run()" );
-			throw new TaskException( "Cannot save an uninitialized report" );
+			throw new VANSException( "Cannot save an uninitialized report" );
 		}
 	}
 	
@@ -97,7 +97,7 @@ public class Task
 		report = new VANSReport( filter.getName() );
 		
 		int errors = 0;
-		for( Command cmd : commands )
+		for( Task cmd : commands )
 		{
 			System.out.println( "Directory: " + cmd.getCwd() );
 			System.out.println( "Command:   " + cmd.getCmd() );

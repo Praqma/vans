@@ -1,4 +1,4 @@
-package net.praqma.vans.command;
+package net.praqma.vans.task;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Shell extends BasicCommand
+public class Shell extends BasicTask
 {
 	private static String linesep = System.getProperty( "line.separator" );
 	
@@ -40,8 +40,32 @@ public class Shell extends BasicCommand
 		this.cwd = path;
 		this.cmd = cmd;
 	}
-
+	
 	public String execute()
+	{
+		Wait waiter = new Wait();
+		waiter.start();
+
+		net.praqma.util.execute.CmdResult result = net.praqma.util.execute.Command.run( this.cmd, cwd, true );
+		
+        waiter.done();
+        
+        try
+		{
+			waiter.join();
+		}
+		catch ( InterruptedException e )
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println( "" );
+		
+		return result.stdoutBuffer.toString();
+	}
+
+	public String execute2()
 	{
 		/* Setup the external process */
 		String[] cmd = { "cmd.exe", "/c", "call", this.tempbatch.getAbsoluteFile().toString() };

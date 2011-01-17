@@ -4,10 +4,11 @@ package net.praqma.vans;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import net.praqma.util.XML;
-import net.praqma.vans.command.Command;
+import net.praqma.util.xml.XML;
+
 import net.praqma.vans.filter.Filter.Findings;
 import net.praqma.vans.filter.Finding;
+import net.praqma.vans.task.Task;
 import net.praqma.vans.util.Status;
 
 import org.w3c.dom.Element;
@@ -28,7 +29,7 @@ public class VANSReport extends XML
 		
 	}
 	
-	public void addCase( Findings findings, Command cmd, Status status )
+	public void addCase( Findings findings, Task cmd, Status status )
 	{
 		Element testcase = addElement( "testcase" );
 		
