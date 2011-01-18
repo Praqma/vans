@@ -7,9 +7,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import net.praqma.util.StopWatch;
+import net.praqma.util.debug.Logger;
+import net.praqma.util.execute.AbnormalProcessTerminationException;
+import net.praqma.util.execute.CmdResult;
+import net.praqma.vans.util.VANSException;
+
 public class Shell extends BasicTask
 {
 	private static String linesep = System.getProperty( "line.separator" );
+	
+	private Logger logger = Logger.getLogger();
 	
 	private File tempbatch = null;
 	
@@ -41,28 +49,41 @@ public class Shell extends BasicTask
 		this.cmd = cmd;
 	}
 	
-	public String execute()
+	public String execute() throws VANSException
 	{
 		Wait waiter = new Wait();
 		waiter.start();
+		
+		CmdResult result = null;
 
-		net.praqma.util.execute.CmdResult result = net.praqma.util.execute.Command.run( this.cmd, cwd, true );
-		
-        waiter.done();
-        
-        try
+		try
 		{
-			waiter.join();
+			result = net.praqma.util.execute.Command.run( this.cmd, cwd, true, true );
 		}
-		catch ( InterruptedException e )
+		catch( AbnormalProcessTerminationException e )
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new VANSException( "Unable to execute " + cmd );
+		}
+		finally
+		{
+	        waiter.done();
+	        
+	        try
+			{
+				waiter.join();
+			}
+			catch ( InterruptedException e )
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			System.out.println( "" );
+			
+			
 		}
 		
-		System.out.println( "" );
-		
-		return result.stdoutBuffer.toString();
+		return result.stdoutBuffer.toString();	
 	}
 
 	public String execute2()
@@ -154,6 +175,7 @@ public class Shell extends BasicTask
 	private class Wait extends Thread
 	{
 		private volatile boolean done = false;
+		private StopWatch sw = StopWatch.get( "waiter" );
 		
 		public void done()
 		{
@@ -165,12 +187,17 @@ public class Shell extends BasicTask
 			int length = 10;
 			int counter = 10;
 			String out2 = new String(new char[(length+1)]).replace("\0", ".");
+			String out3 = new String(new char[(length+1)]).replace("\0", " ");
+			
+			sw.reset();
+			sw.start();
 			
 			while( !done )
 			{
 				
 				counter++;
-				System.out.print( "\r" + out2 );
+				System.out.print( "\r" + out2 + out3 );
+				System.out.print( "\r" + out2 + " " + StopWatch.toSeconds( sw.getTime(), 100 ) + "s" );
 				System.out.print( "\r" + new String(new char[Math.abs( -9 + (counter%(2*length)))]).replace("\0", ".") + "0" );
 				
 				try
@@ -184,7 +211,10 @@ public class Shell extends BasicTask
 				}
 			}
 			
-			System.out.print( "\r (DONE)          " );
+			sw.stop();
+			
+			System.out.print( "\r" + out3 );
+			System.out.print( "\r (DONE) " );
 		}
 	}
 	

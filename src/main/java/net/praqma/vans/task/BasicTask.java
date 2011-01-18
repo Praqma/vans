@@ -2,6 +2,8 @@ package net.praqma.vans.task;
 
 import java.io.File;
 
+import net.praqma.vans.util.VANSException;
+
 public class BasicTask implements Task
 {
 	
@@ -10,7 +12,7 @@ public class BasicTask implements Task
 	protected File cwd = null;
 	
 
-	public String execute()
+	public String execute() throws VANSException
 	{
 		return null;
 	}
