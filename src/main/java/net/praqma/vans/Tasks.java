@@ -101,7 +101,16 @@ public class Tasks
 		{
 			System.out.println( "Directory: " + cmd.getCwd() );
 			System.out.println( "Command:   " + cmd.getCmd() );
-			String result = cmd.execute();
+			String result = null;
+			try
+			{
+				result = cmd.execute();
+			}
+			catch ( VANSException e )
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Status status = filter.filter( result );
 			Findings findings = filter.getFindings();
 			System.out.println( findings.size() + " findings." );
