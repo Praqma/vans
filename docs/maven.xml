@@ -1,16 +1,28 @@
-<project type="Maven">
+<project type="Maven" junitreport="junitreport.xml" vansreport="wansreport.xml">
 	<tasks>
 		
+		<task name="VANS" directory="c:\projects\PRAQMA\VANS\trunk">
+		</task>
+		
+		
+		<task name="praqmajutils" type="Maven" directory="c:\projects\PRAQMA\praqmajutils\trunk">
+			<option name="package"></option>
+			<option name="install">install</option>
+		</task>
+		
+		<!--
 		<task name="VANS" directory="c:\projects\PRAQMA\VANS\trunk">
 			<option name="clean">clean</option>
 			<option name="package">package</option>
 		</task>
 		
-		<task name="COOL" type="Maven" directory="c:\projects\PRAQMA\COOL\trunk">
+		
+		<task name="praqmajutils" type="Maven" directory="c:\projects\PRAQMA\praqmajutils\trunk">
 			<option name="clean">clean</option>
-			<option name="package"></option>
-			<option name="install">install</option>
+			<option name="package">package</option>
+			<option name="install"></option>
 		</task>
+		-->
 		
 	</tasks>
 </project>
