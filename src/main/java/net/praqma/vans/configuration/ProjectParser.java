@@ -16,11 +16,10 @@ import net.praqma.vans.util.VANSException;
 
 public class ProjectParser extends XML
 {
-	Logger logger = Logger.getLogger();
-	
 	private static ClassLoader classloader = ProjectParser.class.getClassLoader();
 	
-	//public Map<String, Configuration> confs = new HashMap<String, Configuration>();
+	public Map<String, String> reports = new HashMap<String, String>();
+	
 	public List<Configuration> confs = new ArrayList<Configuration>();
 	
 	public Type superType = Type.unknown;
@@ -29,9 +28,21 @@ public class ProjectParser extends XML
 	{
 		super( configuration );
 		
-		String type = getRoot().getNodeName();
-		
 		Element taske = this.getFirstElement( "tasks" );
+		
+		/* Save the reports? */
+		String junit = getRoot().getAttribute( "junitreport" );
+		String vans  = getRoot().getAttribute( "vansreport" );
+		
+		if( junit.length() > 0 )
+		{
+			reports.put( "junit", junit );
+		}
+		
+		if( vans.length() > 0 )
+		{
+			reports.put( "vans", vans );
+		}
 		
 		List<Element> tasks = this.getElements( taske, "task" );
 		
@@ -43,8 +54,8 @@ public class ProjectParser extends XML
 			
 			if( !getRoot().getAttribute( "type" ).equals( "" ) )
 			{
-				//conf.setType( Type.valueOf( getRoot().getAttribute( "type" ) ) );
 				mytype = Type.valueOf( getRoot().getAttribute( "type" ) );
+				logger.debug( "Setting type to " + mytype );
 			}
 			
 			
@@ -67,8 +78,8 @@ public class ProjectParser extends XML
 			}
 			catch ( Exception e )
 			{
-				logger.error( "Could not instantiate the class " + type );
-				throw new VANSException( "Could not instantiate the class " + type );
+				logger.error( "Could not instantiate the class " + mytype );
+				throw new VANSException( "Could not instantiate the class " + mytype );
 			}
 			
 			List<Element> options = getElements( task, "option" );

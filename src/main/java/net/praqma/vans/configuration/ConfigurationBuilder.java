@@ -43,17 +43,24 @@ public class ConfigurationBuilder
 			throw new VANSException( e.getMessage() );
 		}
 		
-		/* The meat */
+		//net.praqma.util.structure.Printer.mapPrinter( dp.defaults );
+		
+		/* The meat, for each project configuration */
 		for( Configuration c : pp.confs )
 		{
-			/* Get defaults */
-			if( dp.defaults.containsKey( c.type ) )
+			
+			/* Get defaults for the projects configuration type, if it has any */
+			if( dp.defaults.containsKey( c.type.toString() ) )
 			{
-				for( OptionValue ov : dp.defaults.get( c.type ) )
+				
+				/* For each options value in default */
+				for( OptionValue ov : dp.defaults.get( c.type.toString() ) )
 				{
-					/* Insert a default value if does not exist */
+					
+					/* Insert a default value if it does not exist */
 					if( !c.options.containsKey( ov.name ) )
 					{
+						
 						c.options.put( ov.name, ov.value );
 					}
 				}
@@ -63,7 +70,7 @@ public class ConfigurationBuilder
 				logger.debug( "No default information for " + c.type );
 			}
 			
-			c.print();
+			//c.print();
 			
 			tasks.add( c.buildTask() );
 		}
@@ -96,6 +103,21 @@ public class ConfigurationBuilder
 		Tasks task = new Tasks( this.tasks, filter );
 		
 		task.run();
+		
+		/* Save VANS report */
+		if( pp.reports.containsKey( "vans" ) )
+		{
+			File vans = new File( pp.reports.get( "vans" ) );
+			task.saveVANSReport( vans );
+		}
+		
+		/* Save JUNIT report */
+		if( pp.reports.containsKey( "junit" ) )
+		{
+			File junit = new File( pp.reports.get( "junit" ) );
+			task.saveReport( junit );
+		}
+		
 	}
 	
 	public void run()

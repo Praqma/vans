@@ -44,7 +44,8 @@ public class DefaultParser extends XML
 			
 			for( Element option : options )
 			{
-				OptionValue ov = new OptionValue( prog.getNodeName(), option.getAttribute( "name" ));
+				OptionValue ov = new OptionValue( option.getAttribute( "name" ), option.getTextContent());
+				values.add( ov );
 			}
 			
 			defaults.put( prog.getNodeName(), values );

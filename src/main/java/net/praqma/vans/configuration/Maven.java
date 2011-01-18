@@ -9,8 +9,6 @@ public class Maven extends Configuration
 {
 	public Task buildTask()
 	{
-		System.out.println( "RUNNING MAVEN" );
-		
 		/* Build options */
 		String cmd = "mvn";
 		if( this.options.containsKey( "clean" ) && !this.options.get( "clean" ).equals( "" ) )

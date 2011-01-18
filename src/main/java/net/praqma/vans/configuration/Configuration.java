@@ -59,10 +59,15 @@ public class Configuration
 		int c = 0;
 	    while( it.hasNext() )
 	    {
-	    	c++;
+	    	
 	    	
 	    	Map.Entry<String, String> entry = (Map.Entry<String, String>)it.next();
-	    	System.out.println( "[" + c + "] " + entry.getKey().toString() + ": " + entry.getValue().toString() );
+	    	
+	    	if( entry.getValue().length() > 0 )
+	    	{
+		    	c++;
+		    	System.out.println( "[" + c + "] " + entry.getKey().toString() + ": " + entry.getValue().toString() );
+	    	}
 	    }
 	}
 }
