@@ -22,9 +22,12 @@ public class IARParser extends XML
 	{
 		super( ewp );
 		
-		this.files = process( getRoot() );
-		
 		this.dir = ewp.getParentFile().getPath();
+		
+		//System.out.println( "pATH=" + ewp.getParentFile().getPath() );
+		//System.out.println( "pATH=" + ewp.getPath() );
+		
+		this.files = process( getRoot() );
 	}
 	
 	private List<File> process( Element root )
@@ -46,8 +49,8 @@ public class IARParser extends XML
 			
 			if( match.find() )
 			{
-				
-				files.add( new File( dir + match.group( 1 ) ) );
+				File f1 = new File( dir + match.group( 1 ) );
+				files.add( f1 );
 			}
 		}
 		

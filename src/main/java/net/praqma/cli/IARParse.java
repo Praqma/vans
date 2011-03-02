@@ -47,17 +47,12 @@ public class IARParse
 		
 		File file = new File( ofile.getString() );
 		
-		BuildNumberStamper stamp = null;
-		try
+		if( !file.exists() )
 		{
-			stamp = new BuildNumberStamper( file );
-		}
-		catch ( IOException e )
-		{
-			System.err.println( "Could not create temporary file" );
+			System.err.println( "The file does not exist" );
 			System.exit( 1 );
 		}
-		
+				
 		if( o.verbose() )
 		{
 			o.print();
