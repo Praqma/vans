@@ -6,14 +6,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.praqma.util.debug.Logger;
+import net.praqma.util.debug.PraqmaLogger;
+import net.praqma.util.debug.PraqmaLogger.Logger;
 import net.praqma.vans.task.Task;
 
 public class Configuration
 {
 	protected Map<String, String> options = new HashMap<String, String>();
 	
-	protected Logger logger = Logger.getLogger();
+	protected Logger logger = PraqmaLogger.getLogger();
 	
 	public enum Type
 	{

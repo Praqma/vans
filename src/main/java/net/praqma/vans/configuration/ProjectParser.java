@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.w3c.dom.Element;
 
-import net.praqma.util.debug.Logger;
+import net.praqma.util.debug.PraqmaLogger;
 import net.praqma.util.xml.XML;
 import net.praqma.vans.configuration.Configuration.Type;
 import net.praqma.vans.util.VANSException;

@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.praqma.util.debug.Logger;
+import net.praqma.util.debug.PraqmaLogger;
+import net.praqma.util.debug.PraqmaLogger.Logger;
 import net.praqma.vans.Tasks;
 import net.praqma.vans.configuration.DefaultParser.OptionValue;
 import net.praqma.vans.filter.Filter;
@@ -14,7 +15,7 @@ import net.praqma.vans.util.VANSException;
 
 public class ConfigurationBuilder
 {
-	private Logger logger = Logger.getLogger();
+	private Logger logger = PraqmaLogger.getLogger();
 	
 	public List<Task> tasks = new ArrayList<Task>();
 	

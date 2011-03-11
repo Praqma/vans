@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import net.praqma.util.StopWatch;
-import net.praqma.util.debug.Logger;
+import net.praqma.util.debug.PraqmaLogger;
+import net.praqma.util.debug.PraqmaLogger.Logger;
 import net.praqma.util.execute.AbnormalProcessTerminationException;
 import net.praqma.util.execute.CmdResult;
 import net.praqma.vans.util.VANSException;
@@ -17,7 +18,7 @@ public class Shell extends BasicTask
 {
 	private static String linesep = System.getProperty( "line.separator" );
 	
-	private Logger logger = Logger.getLogger();
+	private Logger logger = PraqmaLogger.getLogger();
 	
 	private File tempbatch = null;
 	

@@ -2,7 +2,7 @@ package net.praqma.vans;
 
 import java.io.File;
 
-import net.praqma.util.debug.Logger;
+import net.praqma.util.debug.PraqmaLogger;
 import net.praqma.vans.filter.MavenFilter;
 import net.praqma.vans.task.Shell;
 import net.praqma.vans.task.Task;
