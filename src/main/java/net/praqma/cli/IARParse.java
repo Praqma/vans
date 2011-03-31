@@ -18,13 +18,18 @@ public class IARParse
 		Options o = new Options( net.praqma.vans.Version.version );
 		
 		Option ofile = new Option( "file", "f", true, 1, "The file to parse. *.ewp" );
+		Option orel  = new Option( "relative", "r", false, 0, "If set, only the relative path is provided" );
+		Option ocut  = new Option( "cutoff", "c", false, 1, "Cutoff a given string from the path" );
 		
 		o.setOption( ofile );
+		o.setOption( orel );
+		o.setOption( ocut );
 		
 		o.setDefaultOptions();
 		
-		o.setSyntax( "IARParse -f file" );
-		o.setDescription( "Parse an IAR project file for files." );
+		o.setSyntax( "IARParse -f <file> [ -r ] [ -c <cutoff> ]" );
+		o.setHeader( "Parse an IAR project file for files." );
+		o.setDescription( "Examples:" + Options.linesep + "IARParse -f test.ewp -c c:\\data" );
 		
 		o.parse( args );
 		
@@ -52,14 +57,36 @@ public class IARParse
 			o.print();
 		}
 		
-		File dir = new File( System.getProperty( "user.dir" ) );
+		boolean relative = orel.used ? true : false;
+		String cutoff    = ocut.used ? ocut.getString().toLowerCase() : "";
+		
 		
 		try
 		{
 			IARParser p = new IARParser( file );
+			int length = p.getPath().length();
+			
 		    for( File f : p.getFiles() )
 		    {
-		    	System.out.println( f.getAbsolutePath() );
+		    	String d = "";
+		    	if( relative )
+		    	{
+		    		 d = f.getAbsolutePath().substring( length );
+		    	}
+		    	else
+		    	{
+		    		d = f.getAbsolutePath();
+		    	}
+		    	
+		    	if( cutoff.length() > 0 )
+		    	{
+		    		if( d.toLowerCase().startsWith( cutoff ) )
+		    		{
+		    			d = d.substring( cutoff.length() );
+		    		}
+		    	}
+		    	
+		    	System.out.println( d );
 		    }
 		}
 		catch ( IOException e )

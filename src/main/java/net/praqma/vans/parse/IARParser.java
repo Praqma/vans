@@ -61,5 +61,10 @@ public class IARParser extends XML
 	{
 		return files;
 	}
+	
+	public String getPath()
+	{
+		return this.dir;
+	}
 
 }
