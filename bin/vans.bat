@@ -25,7 +25,7 @@ EXIT /B 1
 
 :vanshomeok
 
-set VANS_JAR=%VANS_HOME%\build\VANS-0.1.3-jar-with-dependencies.jar
+set VANS_JAR=%VANS_HOME%\build\VANS-0.1.2-jar-with-dependencies.jar
 
 if exist "%VANS_JAR%" goto start1
 
