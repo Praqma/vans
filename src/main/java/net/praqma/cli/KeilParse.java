@@ -11,7 +11,7 @@ import net.praqma.util.option.Options;
 public class KeilParse {
 
 	public static void main(String[] args) {
-		System.out.println("VAnS version: " + net.praqma.vans.Version.version);
+		//System.out.println("VAnS version: " + net.praqma.vans.Version.version);
 		Options o = new Options(net.praqma.vans.Version.version);
 
 		Option ofile = new Option("file", "f", true, 1,

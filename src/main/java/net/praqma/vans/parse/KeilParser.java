@@ -11,58 +11,107 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import sun.misc.Regexp;
+
 import net.praqma.util.xml.XML;
 import net.praqma.vans.util.VANSException;
 
 public class KeilParser extends XML {
-	private List<File> files = new ArrayList<File>();
-	private String dir = null;
+    private List<File> files = new ArrayList<File>();
+    private String dir = null;
 
-	private static final Pattern pattern_proj_dir = Pattern.compile("$(.*)",
-			Pattern.MULTILINE);
+    private static final Pattern pattern_proj_dir = Pattern.compile("$(.*)", Pattern.MULTILINE);
 
-	public KeilParser(File uvproj) throws IOException, VANSException {
-		super(uvproj);
-		this.dir = uvproj.getParentFile().getPath();
+    public KeilParser(File uvproj) throws IOException, VANSException {
+        super(uvproj);
+        this.dir = uvproj.getParentFile().getPath();
 
-		this.files = process(getRoot());
+        this.files = process(getRoot());
 
-	}
+    }
 
-	private List<File> process(Element root) throws VANSException {
+    private List<File> process(Element root) throws VANSException {
 
-		List<Element> targets = getElements(root, "Targets");
-		if (targets.size() != 1) {
-			throw new VANSException(
-					"We does not have support for multiple targets in a Keil project file yet");
-		}
-		List<Element> t = getElements(targets.get(0), "Target");
-		List<Element> gs = getElements(t.get(0), "Groups");
-		List<Element> g = getElements(gs.get(0), "Group");
-		List<Element> fs = getElements(g.get(0), "Files");
-		List<Element> fileElements = getElements(fs.get(0), "File");
+        List<Element> targets = getElements(root, "Targets");
+        if (targets.size() != 1) {
+            throw new VANSException("We does not have support for multiple targets in a Keil project file yet");
+        }
+        List<Element> t = getElements(targets.get(0), "Target");
+        List<Element> gs = getElements(t.get(0), "Groups");
+        List<Element> g = getElements(gs.get(0), "Group");
+        List<Element> fs = getElements(g.get(0), "Files");
+        List<Element> fileElements = getElements(fs.get(0), "File");
 
-		for (Element f : fileElements) {
-			List<Element> fn = getElements(f, "FileName");
+        // Finds all the .c files in a Keil project
+        for (Element f : fileElements) {
+            List<Element> fn = getElements(f, "FileName");
 
-			String file = fn.get(0).getTextContent();
-			Matcher match = pattern_proj_dir.matcher(file);
+            String file = fn.get(0).getTextContent();
+            Matcher match = pattern_proj_dir.matcher(file);
 
-			if (match.find()) {
-				File f1 = new File(dir + "\\" + file);
-				this.files.add(f1);
-			}
-		}
+            if (match.find()) {
+                File f1 = new File(dir + "\\" + file);
+                this.files.add(f1);
+            }
+        }
 
-		return files;
-	}
+        // Finds all .h files in a Keil project
+        List<Element> t1 = getElements(targets.get(0), "Target");
+        for (Element f : getElements(t1.get(0))) {
+            // System.out.println("Target: "+f.getNodeName());
+        }
+        List<Element> to = getElements(t1.get(0), "TargetOption");
+        for (Element f : getElements(to.get(0))) {
+            // System.out.println("TargetOption: "+f.getNodeName());
+        }
 
-	public List<File> getFiles() {
-		return files;
-	}
+        List<Element> tco = getElements(to.get(0), "TargetArmAds");
+        for (Element f : getElements(tco.get(0))) {
+            // System.out.println("TargetArmAds: "+f.getNodeName());
+        }
 
-	public String getPath() {
-		return this.dir;
-	}
+        List<Element> cAds = getElements(tco.get(0), "Cads");
+        for (Element f : getElements(cAds.get(0))) {
+            // System.out.println("cAds: "+f.getNodeName());
+        }
+        List<Element> vc = getElements(cAds.get(0), "VariousControls");
+        List<Element> inc = getElements(vc.get(0), "IncludePath");
+
+        String incPaht = inc.get(0).getTextContent();
+        String[] incPaths = incPaht.split(";");
+
+        for (String path : incPaths) {
+            path = dir + path;
+            Matcher match = pattern_proj_dir.matcher(path);
+            if (match.find()) {
+
+                File directory = new File(path);
+                String[] children = directory.list();
+                
+                if (children == null) {
+                    break;
+                    // Either dir does not exist or is not a directory
+                } else {
+                    for (int i = 0; i < children.length; i++) {
+                        // Get filename of file or directory
+                        String filename = children[i];
+                        this.files.add(new File(path+"\\"+filename));
+                    }
+                }
+
+            }
+
+        }
+
+        return files;
+    }
+
+    public List<File> getFiles() {
+        return files;
+    }
+
+    public String getPath() {
+        return this.dir;
+    }
 
 }

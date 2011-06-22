@@ -25,8 +25,8 @@ EXIT /B 1
 
 :vanshomeok
 
-set VANS_JAR=%VANS_HOME%\build\VANS-0.1.2-jar-with-dependencies.jar
-
+set VANS_JAR=%VANS_HOME%\build\VANS-0.1.3-jar-with-dependencies.jar
+echo %VANS_JAR%
 if exist "%VANS_JAR%" goto start1
 
 echo.
@@ -37,8 +37,7 @@ EXIT /B 1
 
 :start1
 
-
-set vans=java -classpath %VANS_JAR% %package%.%program% %args%
+set vans=java -classpath "%VANS_JAR%" %package%.%program% %args%
 
 call %vans%
 
