@@ -44,7 +44,7 @@ public class KeilParser extends XML {
 
         // Finds all the .c files in a Keil project
         for (Element f : fileElements) {
-            List<Element> fn = getElements(f, "FileName");
+            List<Element> fn = getElements(f, "FilePath");
 
             String file = fn.get(0).getTextContent();
             Matcher match = pattern_proj_dir.matcher(file);
@@ -95,7 +95,10 @@ public class KeilParser extends XML {
                     for (int i = 0; i < children.length; i++) {
                         // Get filename of file or directory
                         String filename = children[i];
-                        this.files.add(new File(path+"\\"+filename));
+                        if (filename.endsWith(".c") || filename.endsWith(".h") ||
+                            filename.endsWith(".cpp")  ){
+                            this.files.add(new File(path+"\\"+filename));
+                        }
                     }
                 }
 
