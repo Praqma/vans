@@ -4,7 +4,7 @@
 	<groupId>net.praqma</groupId>
 	<artifactId>VANS</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1.3</version>
+	<version>0.1.3-SNAPSHOT</version>
 	<name>Validate Any Software</name>
 	<url>http://maven.apache.org</url>
 
