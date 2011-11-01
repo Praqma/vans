@@ -8,18 +8,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import sun.misc.Regexp;
 
 import net.praqma.util.xml.XML;
 import net.praqma.vans.util.VANSException;
 
 public class KeilParser extends XML {
+
     private List<File> files = new ArrayList<File>();
     private String dir = null;
-
     private static final Pattern pattern_proj_dir = Pattern.compile("$(.*)", Pattern.MULTILINE);
 
     public KeilParser(File uvproj) throws IOException, VANSException {
@@ -120,5 +116,4 @@ public class KeilParser extends XML {
     public String getPath() {
         return this.dir;
     }
-
 }
