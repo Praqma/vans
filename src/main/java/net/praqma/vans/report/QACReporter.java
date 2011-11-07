@@ -85,8 +85,6 @@ public class QACReporter {
             int errors = Integer.parseInt(temp.get(i - 1));
 
             while (errors > 0) {
-                System.out.println("number errors: " + errors);
-
                 Finding finding = new Finding("QAC has " + temp.get(i - 1) + " errors", Finding.Level.ERROR);
 
                 report.addCase(finding, errors, "QAC", new Status(temp.get(0), "QAC errors", "QAC has " + errors + " errors", true));
