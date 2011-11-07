@@ -53,8 +53,8 @@ public class VANSReport extends XML {
         Element testcase = addElement("testcase");
 
         testcase.setAttribute("name", fileName);
-        testcase.setAttribute("number", 1+"");
-        testcase.setAttribute("errors", number + "");
+        testcase.setAttribute("number", number+"");
+        testcase.setAttribute("errors", 1 + "");
 
         addElement(testcase, "file").setTextContent(fileName);
 

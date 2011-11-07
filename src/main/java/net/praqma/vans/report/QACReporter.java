@@ -70,38 +70,6 @@ public class QACReporter {
                 continue;
             }
 
-            /*     Pattern fileP = Pattern.compile("^.*[h|c][\\s*|\\d]*$", Pattern.MULTILINE);
-            Pattern dirP = Pattern.compile("^.*\\\\.*$", Pattern.MULTILINE);
-
-            if (dirP.matcher(s).find()) {
-            //if the line is pointing to a dir
-            path = s.replace(" ", "");
-            continue;
-            } else if (fileP.matcher(s).find()) {
-            //if the line is pointing to a file it will have multiple numbers in it
-            } else {
-            //else this is just 'noice line'
-            continue;
-            }
-
-            String fqFile = path + "\\" + s;
-            HashMap<Integer, String> temp = new HashMap<Integer, String>();
-
-            int i = 0;
-            for (String s1 : fqFile.split("\\s++")) {
-            temp.put(i, s1);
-            i++;
-            }
-
-            fqFile = temp.get(0);
-
-            //if value of key i-1 is 0 it means there are 0 total erros for this file
-            int errors = Integer.parseInt(temp.get(i - 1));
-            if (errors <= 0) {
-            continue;
-            }*/
-
-
             Pattern totalP = Pattern.compile("^Total.*\\d$");
             if (!totalP.matcher(s).find()) {
                 continue;
@@ -116,9 +84,21 @@ public class QACReporter {
 
             int errors = Integer.parseInt(temp.get(i - 1));
 
-            Finding finding = new Finding("QAC has " + temp.get(i - 1) + " errors", Finding.Level.ERROR);
+            while (errors > 0) {
+                System.out.println("number errors: " + errors);
 
-            report.addCase(finding, errors,"QAC",  new Status(temp.get(0), "QAC errors", "QAC has "+ errors + " errors", true));
+                Finding finding = new Finding("QAC has " + temp.get(i - 1) + " errors", Finding.Level.ERROR);
+
+                report.addCase(finding, errors, "QAC", new Status(temp.get(0), "QAC errors", "QAC has " + errors + " errors", true));
+                errors--;
+            }
+
+            /*
+             * Finding finding = new Finding("QAC has " + temp.get(i - 1) + " errors", Finding.Level.ERROR);
+             *
+             * report.addCase(finding, errors, "QAC", new Status(temp.get(0), "QAC errors", "QAC has " + errors + " errors", true));
+             *
+             */
 
         }
 
