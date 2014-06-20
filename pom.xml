@@ -6,7 +6,13 @@
 	<version>0.1.4-SNAPSHOT</version>
 	<name>Validate Any Software</name>
 	<url>http://maven.apache.org</url>
-
+    <developers>
+        <developer>
+            <id>praqma_josra</id>
+            <name>Praqma Josra</name>
+            <email>josra@praqma.net</email>
+        </developer>
+    </developers>
 	<organization>
 		<name>Praqma A/S</name>
 		<url>http://www.praqma.net</url>
